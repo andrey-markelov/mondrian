@@ -202,16 +202,16 @@ public class SegmentBuilder {
         final List<AxisInfo> axes = new ArrayList<AxisInfo>(keepColumns.size());
         int z = 0, j = 0;
         List<SegmentColumn> firstHeaderConstrainedColumns = firstHeader.getConstrainedColumns();
+        Set<String> columnExpressions = new HashSet<String>();
         for (SegmentColumn column : firstHeaderConstrainedColumns) {
-            if(firstHeaderConstrainedColumns.indexOf(column) == j) {
-                //if header column is unique
-                if (keepColumns.contains(column.columnExpression)) {
-                    final AxisInfo axisInfo = new AxisInfo();
-                    axes.add(axisInfo);
-                    axisInfo.src = j;
-                    axisInfo.column = column;
-                    axisInfo.requestedValues = column.values;
-                }
+            int pos = firstHeaderConstrainedColumns.indexOf(column);
+            if (keepColumns.contains(column.columnExpression) && !columnExpressions.contains(column.columnExpression)) {
+                final AxisInfo axisInfo = new AxisInfo();
+                axes.add(axisInfo);
+                axisInfo.src = j;
+                axisInfo.column = column;
+                axisInfo.requestedValues = column.values;
+                columnExpressions.add(column.columnExpression);
             }
             j++;
         }
@@ -312,12 +312,10 @@ public class SegmentBuilder {
             // projected away, store null.
             z = 0;
             for (SortedSet<Comparable> set : body.getAxisValueSets()) {
-                if(firstHeaderConstrainedColumns.indexOf(firstHeaderConstrainedColumns.get(z)) == z) {
                     valueArrays[z] = keepColumns.contains(
                     firstHeaderConstrainedColumns.get(z).columnExpression)
                             ? set.toArray(new Comparable[set.size()])
                             : null;
-                }
                 ++z;
             }
             Map<CellKey, Object> v = body.getValueMap();
