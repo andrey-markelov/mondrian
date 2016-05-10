@@ -203,8 +203,8 @@ public class SegmentBuilder {
         int z = 0, j = 0;
         List<SegmentColumn> firstHeaderConstrainedColumns = firstHeader.getConstrainedColumns();
         for (SegmentColumn column : firstHeaderConstrainedColumns) {
-            if(firstHeaderConstrainedColumns.lastIndexOf(column) != j) {
-                //if colunn unique
+            if(firstHeaderConstrainedColumns.indexOf(column) == j) {
+                //if header column is unique
                 if (keepColumns.contains(column.columnExpression)) {
                     final AxisInfo axisInfo = new AxisInfo();
                     axes.add(axisInfo);
@@ -312,7 +312,7 @@ public class SegmentBuilder {
             // projected away, store null.
             z = 0;
             for (SortedSet<Comparable> set : body.getAxisValueSets()) {
-                if(firstHeaderConstrainedColumns.lastIndexOf(firstHeaderConstrainedColumns.get(z)) != z) {
+                if(firstHeaderConstrainedColumns.indexOf(firstHeaderConstrainedColumns.get(z)) == z) {
                     valueArrays[z] = keepColumns.contains(
                     firstHeaderConstrainedColumns.get(z).columnExpression)
                             ? set.toArray(new Comparable[set.size()])
