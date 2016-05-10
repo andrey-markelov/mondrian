@@ -202,9 +202,9 @@ public class SegmentBuilder {
         final AxisInfo[] axes =
             new AxisInfo[keepColumns.size()];
         int z = 0, j = 0;
-        //List<SegmentColumn> uniqueColumns = new ArrayList<SegmentColumn>(new HashSet<SegmentColumn>(firstHeader.getConstrainedColumns()));
-        for (SegmentColumn column : firstHeader.getConstrainedColumns()) {
-            if(firstHeader.getConstrainedColumns().lastIndexOf(column) != j) {
+        List<SegmentColumn> constrainedColumns = firstHeader.getConstrainedColumns();
+        for (SegmentColumn column : constrainedColumns) {
+            if(constrainedColumns.lastIndexOf(column) != j) {
                 //if colunn unique
                 if (keepColumns.contains(column.columnExpression)) {
                     final AxisInfo axisInfo = axes[z++] = new AxisInfo();
@@ -305,16 +305,16 @@ public class SegmentBuilder {
         for (Map.Entry<SegmentHeader, SegmentBody> entry : map.entrySet()) {
             final int[] pos = new int[axes.length];
             final Comparable[][] valueArrays =
-                new Comparable[firstHeader.getConstrainedColumns().size()][];
+                new Comparable[constrainedColumns.size()][];
             final SegmentBody body = entry.getValue();
 
             // Copy source value sets into arrays. For axes that are being
             // projected away, store null.
             z = 0;
             for (SortedSet<Comparable> set : body.getAxisValueSets()) {
-                if(firstHeader.getConstrainedColumns().lastIndexOf(firstHeader.getConstrainedColumns().get(z)) != z) {
+                if(constrainedColumns.lastIndexOf(constrainedColumns.get(z)) != z) {
                     valueArrays[z] = keepColumns.contains(
-                    firstHeader.getConstrainedColumns().get(z).columnExpression)
+                    constrainedColumns.get(z).columnExpression)
                             ? set.toArray(new Comparable[set.size()])
                             : null;
                 }
