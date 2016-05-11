@@ -1100,18 +1100,8 @@ public class SegmentBuilderTest extends BatchTestCase {
                   10, 15, false, null),
               new HashSet<String>(Arrays.asList("col1", "col2")),
               null, RolapAggregator.Sum, Dialect.Datatype.Numeric);
-      assertEquals(rollup.left.getConstrainedColumns().size(), 2);
+      assertEquals(2, rollup.left.getConstrainedColumns().size());
 
-//      // greater than 1K col vals, above density ratio
-//      rollup =
-//          SegmentBuilder.rollup(
-//              makeSegmentMap(
-//                  new String[] {"col1", "col2", "col3", "col4"},
-//                  null, 11, 10000, false, null),
-//                  // 1331 possible intersections (11*3)
-//              new HashSet<String>(Arrays.asList("col1", "col2", "col3")),
-//              null, RolapAggregator.Sum, Dialect.Datatype.Numeric);
-//      assertTrue(rollup.right instanceof DenseDoubleSegmentBody);
   }
 
 }

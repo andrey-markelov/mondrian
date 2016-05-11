@@ -176,6 +176,7 @@ public class SegmentBuilder {
      * @return Segment header and body of requested dimensionality
      * @param datatype The data type to use.
      */
+    @SuppressWarnings("unchecked")
     public static Pair<SegmentHeader, SegmentBody> rollup(
         Map<SegmentHeader, SegmentBody> map,
         Set<String> keepColumns,
@@ -205,7 +206,7 @@ public class SegmentBuilder {
         Set<String> columnExpressions = new HashSet<String>();
         for (SegmentColumn column : firstHeaderConstrainedColumns) {
             int pos = firstHeaderConstrainedColumns.indexOf(column);
-            if (keepColumns.contains(column.columnExpression) && !columnExpressions.contains(column.columnExpression)) {
+            if (keepColumns.contains(column.columnExpression) ) {//&& !columnExpressions.contains(column.columnExpression)
                 final AxisInfo axisInfo = new AxisInfo();
                 axes.add(axisInfo);
                 axisInfo.src = j;
@@ -328,7 +329,7 @@ public class SegmentBuilder {
                         continue;
                     }
                     final int ordinal = vEntry.getKey().getOrdinals()[i];
-                    final int targetOrdinal;
+                    int targetOrdinal;
                     if (axes.get(z).hasNull && ordinal == valueArray.length) {
                         targetOrdinal = axes.get(z).valueSet.size();
                     } else {
@@ -341,6 +342,14 @@ public class SegmentBuilder {
                                     axes.get(z).values,
                                     0, axes.get(z).values.length,
                                     value);
+                            if (targetOrdinal >= 0) {
+                                for(int ii = 0; ii < z; ii++) {
+                                    if(targetOrdinal == pos[ii]) {
+                                        //targetOrdinal = -1;
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
                     if (targetOrdinal >= 0) {
