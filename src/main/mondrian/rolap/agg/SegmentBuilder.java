@@ -205,7 +205,6 @@ public class SegmentBuilder {
         List<SegmentColumn> firstHeaderConstrainedColumns = firstHeader.getConstrainedColumns();
         Set<String> columnExpressions = new HashSet<String>();
         for (SegmentColumn column : firstHeaderConstrainedColumns) {
-            int pos = firstHeaderConstrainedColumns.indexOf(column);
             if (keepColumns.contains(column.columnExpression) ) {//&& !columnExpressions.contains(column.columnExpression)
                 final AxisInfo axisInfo = new AxisInfo();
                 axes.add(axisInfo);
