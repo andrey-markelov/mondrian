@@ -233,14 +233,10 @@ public class SqlTupleReader implements TupleReader {
                     if (!childLevel.getOrdinalExp().equals(
                             childLevel.getKeyExp()))
                     {
-                        LOGGER.warn(
-                            "Different level KeyExp="
-                            + childLevel.getKeyExp()
-                            + " and OrdinalExp="
-                            + childLevel.getOrdinalExp()
-                            + " was detected. Behaviour may be indeterminate");
+
                         ++column;
                     }
+                    
                     column += childLevel.getProperties().length;
 
                     // Cache in our intermediate map the key/member pair
@@ -1077,6 +1073,7 @@ public class SqlTupleReader implements TupleReader {
         boolean needsGroupBy =
             isGroupByNeeded(sqlQuery, hierarchy, levels, levelDepth);
 
+        Set<String> orderSet = new HashSet<String>();
         for (int i = 0; i <= levelDepth; i++) {
             RolapLevel currLevel = levels[i];
             if (currLevel.isAll()) {
@@ -1168,11 +1165,13 @@ public class SqlTupleReader implements TupleReader {
                 if (whichSelect == WhichSelect.ONLY) {
                     sqlQuery.addOrderBy(
                         ordinalSql, orderByAlias, true, false, true, true);
+                    orderSet.add(ordinalSql);
                 }
             } else {
                 if (whichSelect == WhichSelect.ONLY) {
                     sqlQuery.addOrderBy(
                         keySql, keyAlias, true, false, true, true);
+                    orderSet.add(keySql);
                 }
             }
 
@@ -1227,6 +1226,12 @@ public class SqlTupleReader implements TupleReader {
                         sqlQuery.addGroupBy(propSql, propAlias);
                     }
                 }
+            }
+
+            if(orderSet.size() > Math.max(levelDepth, 1)) {
+                LOGGER.warn(
+                    "Too much level order expressions for level: "
+                    + level.toString() + ", columns: " + orderSet.toString());
             }
         }
     }
