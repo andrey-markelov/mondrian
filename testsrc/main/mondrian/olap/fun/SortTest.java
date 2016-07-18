@@ -161,6 +161,119 @@ public class SortTest extends FoodMartTestCase
             + "Row #13: Infinity\n"
             + "Row #13: 1\n");
     }
+    
+
+public void testMondrian2330() throws Exception {
+    assertQueryReturns(
+       "SELECT NON EMPTY ({[Time].[1998]} * {[Measures].[Avg Salary]}) ON COLUMNS,\n"
+       + "NON EMPTY Order([Position].[Management Role].Members, [Measures].[Avg Salary], BDESC) ON ROWS FROM [HR]",
+        "Axis #0:\n"
+        + "{}\n"
+        + "Axis #1:\n"
+        + "{[Time].[1998], [Measures].[Avg Salary]}\n"
+        + "{[Position].[Store Management]}\n"
+        + "{[Position].[Senior Management]}\n"
+        + "{[Position].[Store Full Time Staf]}\n"
+        + "{[Position].[Middle Management]}\n"
+        + "{[Position].[Store Temp Staff]}\n"
+        + "Row #0: $504.76\n"
+        + "Row #1: $462.00\n"
+        + "Row #2: $215.39\n"
+        + "Row #3: $107.29\n"
+        + "Row #4: $40.31\n");
+        assertQueryReturns(
+            
+
+"SELECT NON EMPTY {[Measures].[Avg Salary]} ON COLUMNS,\n"
+
+
+            + 
+
+"NON EMPTY Order([Position].[Management Role].Members, [Measures].[Avg Salary], BDESC) ON ROWS\n"
+
+
+            + 
+
+"FROM [HR] WHERE {[Time].[1998]}"
+
+,
+            
+
+"Axis #0:\n"
+
+
+            + 
+
+"{[Time].[1998]}\n"
+
+
+            + 
+
+"Axis #1:\n"
+
+
+            + 
+
+"{[Measures].[Avg Salary]}\n"
+
+
+            + 
+
+"Axis #2:\n"
+
+
+            + 
+
+"{[Position].[Store Management]}\n"
+
+
+            + 
+
+"{[Position].[Senior Management]}\n"
+
+
+            + 
+
+"{[Position].[Store Full Time Staf]}\n"
+
+
+            + 
+
+"{[Position].[Middle Management]}\n"
+
+
+            + 
+
+"{[Position].[Store Temp Staff]}\n"
+
+
+            + 
+
+"Row #0: $504.76\n"
+
+
+            + 
+
+"Row #1: $462.00\n"
+
+
+            + 
+
+"Row #2: $215.39\n"
+
+
+            + 
+
+"Row #3: $107.29\n"
+
+
+            + 
+
+"Row #4: $40.31\n"
+
+);
+    }
+
 }
 
 // End SortTest.java
